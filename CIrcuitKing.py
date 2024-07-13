@@ -40,7 +40,7 @@ class CircuitKing:
             samples = sampling_frequency//freq
         time_array = [i/samples for i in range(samples)]
         wave = [int((clamper(waveform(t)))*255) for t in time_array]
-        buffer = bytearray(10+ARBITRARY_MAX_BUFFER_LENGTH)
+        buffer = bytearray(9+ARBITRARY_MAX_BUFFER_LENGTH)
         command_packet = struct.pack('B',ARBITRARY_WAVE)
         freq_buffer = struct.pack('<i',sampling_frequency)
         print(sampling_frequency)
@@ -51,7 +51,9 @@ class CircuitKing:
         print(wave_buffer)
         data_packet = command_packet + freq_buffer + size_buffer + wave_buffer
         buffer[:len(data_packet)] = data_packet
+        # print(len(buffer))
         print("Sending Data")
+        self.ser.write(buffer)
         if(self.check_response):
             print("Checking for Response")
             print(self.ser.readlines())
