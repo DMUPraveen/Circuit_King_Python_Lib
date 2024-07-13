@@ -8,6 +8,8 @@ DAC_COSINE_ATTEN_DB_12 = 2
 DAC_COSINE_ATTEN_DB_18 = 3
 MAX_FREQ = 1000000;
 ARBITRARY_MAX_BUFFER_LENGTH = 2048
+OSCILLOSCOPE_SAMPLE = 73
+OSCILLOSCOPE_REPLY_SIZE = 2048
 def clamper(x):
     if x > 1:
         return 1
@@ -58,6 +60,14 @@ class CircuitKing:
             print("Checking for Response")
             print(self.ser.readlines())
         
+    def oscilloscope_sample(self):
+        # self.ser.flush()
+        self.ser.write(struct.pack('B',OSCILLOSCOPE_SAMPLE))
+        reply = self.ser.read(OSCILLOSCOPE_REPLY_SIZE)
+        # print(reply)
+        print(len(reply))
+        data = [d for d in struct.iter_unpack('H',reply)]
+        return data
         
         
 
