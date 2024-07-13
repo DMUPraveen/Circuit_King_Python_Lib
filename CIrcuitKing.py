@@ -10,6 +10,8 @@ MAX_FREQ = 1000000;
 ARBITRARY_MAX_BUFFER_LENGTH = 2048
 OSCILLOSCOPE_SAMPLE = 73
 OSCILLOSCOPE_REPLY_SIZE = 2048
+PULSE_MEASURE =101
+PULSE_MEASURE_REPLY_SIZE =4
 def clamper(x):
     if x > 1:
         return 1
@@ -69,5 +71,13 @@ class CircuitKing:
         data = [d for d in struct.iter_unpack('H',reply)]
         return data
         
+    def pulse_measure(self):
+        # self.ser.flush()
+        self.ser.write(struct.pack('B',PULSE_MEASURE))
+        reply = self.ser.read(PULSE_MEASURE_REPLY_SIZE)
+        # print(reply)
+        print(len(reply))
+        data = struct.unpack('f',reply)
+        return data
         
 
