@@ -12,6 +12,8 @@ OSCILLOSCOPE_SAMPLE = 73
 OSCILLOSCOPE_REPLY_SIZE = 2048
 PULSE_MEASURE =101
 PULSE_MEASURE_REPLY_SIZE =4
+IV_COMMAND = 13
+IV_COMMAND_REPLY_SIZE = 24
 def clamper(x):
     if x > 1:
         return 1
@@ -78,6 +80,18 @@ class CircuitKing:
         # print(reply)
         print(len(reply))
         data = struct.unpack('f',reply)
+        return data
+
+
+    def iv_curve(self,current,voltage,connections):
+        code = struct.pack('B',IV_COMMAND)
+        connections = struct.pack('B',connections)
+        voltage = struct.pack('f',voltage)
+        current = struct.pack('f',current)
+        packet = code + connections + voltage + current
+        self.ser.write(packet)
+        reply = self.ser.read(IV_COMMAND_REPLY_SIZE)
+        data = [val for val in struct.iter_unpack('f',reply)]
         return data
     def close(self):
         self.ser.close()
