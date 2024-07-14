@@ -79,5 +79,9 @@ class CircuitKing:
         print(len(reply))
         data = struct.unpack('f',reply)
         return data
+    def close(self):
+        self.ser.close()
+    def __del__(self):
+        self.ser.close()
         
 
