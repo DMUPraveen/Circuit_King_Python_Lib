@@ -14,6 +14,7 @@ PULSE_MEASURE =101
 PULSE_MEASURE_REPLY_SIZE =4
 IV_COMMAND = 13
 IV_COMMAND_REPLY_SIZE = 24
+LED_COMMAND = 183
 def clamper(x):
     if x > 1:
         return 1
@@ -93,6 +94,13 @@ class CircuitKing:
         reply = self.ser.read(IV_COMMAND_REPLY_SIZE)
         data = [val for val in struct.iter_unpack('f',reply)]
         return data
+
+    def led_control(self,state):
+        code = struct.pack('B',LED_COMMAND)
+        state = struct.pack('B',state)
+        data = code+state
+        self.ser.write(data)
+
     def close(self):
         self.ser.close()
     def __del__(self):
